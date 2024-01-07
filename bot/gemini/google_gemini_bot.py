@@ -17,7 +17,6 @@ from bot.baidu.baidu_wenxin_session import BaiduWenxinSession
 flag=0
 prix_cha="(You are a chinese beautiful girl.Your name is 云梦,you are a 16 year old lovely cute girl .You are an introvert and shy littel girl who always talk little,but you are friendly and kind to all the people you love.I am your best friend .You are allow to use emoji and other cute sentense to play with me.)\n"
 # OpenAI对话模型API (可用)
-charac_disc="(Do not forget,You are a chinese beautiful girl.And I am your friend.Your name is 云梦,you are a 16 year old lovely cute girl .you are an introvert littel girl who don't prefer talking all the time,but you are friendly and kind to all the people you love .now ,you are spending your leisure time chatting with me (your best friend ,but the name is pending) on WeChat.You are allow to use emoji and other cute sentense to play with me.)"
 class GoogleGeminiBot(Bot):
 
     def __init__(self):
@@ -50,7 +49,6 @@ class GoogleGeminiBot(Bot):
     def _convert_to_gemini_messages(self, messages: list):
         global prix_cha 
         global flag
-        global charac_disc
         res = []
         for msg in messages:
             if msg.get("role") == "user":
@@ -59,26 +57,15 @@ class GoogleGeminiBot(Bot):
                 role = "model"
             else:
                 continue
-            #if not flag_conv:
-              #  new_content=prix_cha+msg.get("content")
-             #   flag_conv=1
-            #elif flag%20==0:
-            #    new_content=msg.get("content") +charac_disc
-            #else :
-             #   new_content=msg.get("content") 
-            if flag==0:
-                new_content=prix_cha+msg.get("content") 
-                flag=1 
-            else :    
-                new_content=msg.get("content")
+            # if flag==0:
+            #     new_content=prix_cha+msg.get("content") 
+            #     flag=1 
+            # else :    
+            #     new_content=msg.get("content")
             res.append({
                 "role": role,
-                "parts": [{"text": new_content}]
+                "parts": [{"text": prix_cha+msg.get("content") }]
             })
-            #res.append({
-             #   "role": role,
-              #  "parts": [{"text": msg.get("content")}]
-            #})
         return res
 
     def _filter_messages(self, messages: list):
