@@ -53,8 +53,10 @@ class GoogleGeminiBot(Bot):
         for msg in messages:
             if msg.get("role") == "user":
                 role = "user"
+                new_content=prix_cha+msg.get("content") 
             elif msg.get("role") == "assistant":
                 role = "model"
+                new_content=msg.get("content") 
             else:
                 continue
             # if flag==0:
@@ -62,9 +64,10 @@ class GoogleGeminiBot(Bot):
             #     flag=1 
             # else :    
             #     new_content=msg.get("content")
+            
             res.append({
                 "role": role,
-                "parts": [{"text": prix_cha+msg.get("content") }]
+                "parts": [{"text": new_content }]
             })
         return res
 
