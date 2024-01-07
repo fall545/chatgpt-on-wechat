@@ -37,7 +37,7 @@ class GoogleGeminiBot(Bot):
             genai.configure(api_key=self.api_key)
             model = genai.GenerativeModel('gemini-pro')
             print("\n\ntest——prompt:\n",gemini_messages,"\n\nend\n\n")            
-            response = model.generate_content(gemini_messages,safety_settings={'HARASSMENT':'block_none','Sexually explicit':'block_none','Hate speech':'block_none','Dangerous':'block_none'})
+            response = model.generate_content(gemini_messages,safety_settings={'HARASSMENT':'block_none','SEXTUALLY EXPLICIT':'block_none','HATE SPEECH':'block_none','DANGEROUS':'block_none'})
             reply_text = response.text
             self.sessions.session_reply(reply_text, session_id)
             logger.info(f"[Gemini] reply={reply_text}")
