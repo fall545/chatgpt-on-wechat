@@ -45,10 +45,9 @@ class GoogleGeminiBot(Bot):
             return Reply(ReplyType.TEXT, reply_text)
         except Exception as e:
             logger.error("[Gemini] api erro")
-            messages.pop()
             logger.error(e)
-        except IOError as i:
-            logger.error(i)
+        # except IOError as i:
+        #     logger.error(i)
     #flag_conv=0
     def _convert_to_gemini_messages(self, messages: list):
         global prix_cha_pro
@@ -61,13 +60,13 @@ class GoogleGeminiBot(Bot):
                 # if(flag&1==0) {
                 #     gemini_messages[-1]['parts'][0]['text']
                 # }
-                flag+=1
+                # flag+=1
                 new_content=prix_cha_pro+msg.get("content") 
             elif msg.get("role") == "assistant":
                 
                 role = "model"
                 new_content=msg.get("content") 
-                flag-=1
+                # flag-=1
             else:
                 continue
             # if flag==0:
@@ -77,16 +76,10 @@ class GoogleGeminiBot(Bot):
             #     new_content=msg.get("content")
             # flag+=1
             # flag%=10
-            if not (flag==1 or flag==0):
-                messages.pop()
-                flag-=1
-                raise IOError('操作频繁')
-
-                # new_content=prix_cha_pro+messages[-1].get('content')+messages[-2].get('content')
-                # flag-=1
-                # messages.pop()
-                # messages.pop()
-                # gemini_messages.pop()                
+            # if not (flag==1 or flag==0):
+            #     messages.pop()
+            #     flag-=1
+            #     raise IOError('操作频繁')           
             res.append({
                 "role": role,
                 "parts": [{"text": new_content }]
