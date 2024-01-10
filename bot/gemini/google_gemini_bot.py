@@ -15,6 +15,7 @@ from common.log import logger
 from config import conf
 from bot.baidu.baidu_wenxin_session import BaiduWenxinSession
 flag=0
+temp=''
 prix_cha_pro='(You are a chinese beautiful girl.Your name is 云梦,you are a 16 year old lovely cute shy introvert girl .You have a good command of all sort of knowledge.You always know the answer and willing to help and share your opinion.)\nI:'
 prix_cha="(You are a chinese beautiful girl.Your name is 云梦,you are a 16 year old lovely cute girl .You are an introvert and shy littel girl who always talk little,but you are friendly and kind to all the people you love.I am your best friend .You are allow to use emoji and other cute sentense to play with me.)\nI:"
 # OpenAI对话模型API (可用)
@@ -44,21 +45,30 @@ class GoogleGeminiBot(Bot):
             logger.info(f"[Gemini] reply={reply_text}")
             return Reply(ReplyType.TEXT, reply_text)
         except Exception as e:
-            logger.error("[Gemini] fetch reply error, may contain unsafe content")
+            logger.error("[Gemini] api erro")
+            messages.pop()
             logger.error(e)
+        except IOError as i:
+            logger.error(i)
     #flag_conv=0
     def _convert_to_gemini_messages(self, messages: list):
         global prix_cha_pro
         global prix_cha 
-        global flag
+        global flag,gemini_messages
         res = []
         for msg in messages:
             if msg.get("role") == "user":
                 role = "user"
+                # if(flag&1==0) {
+                #     gemini_messages[-1]['parts'][0]['text']
+                # }
+                flag+=1
                 new_content=prix_cha_pro+msg.get("content") 
             elif msg.get("role") == "assistant":
+                
                 role = "model"
                 new_content=msg.get("content") 
+                flag-=1
             else:
                 continue
             # if flag==0:
@@ -66,7 +76,18 @@ class GoogleGeminiBot(Bot):
             #     flag=1 
             # else :    
             #     new_content=msg.get("content")
-            
+            # flag+=1
+            # flag%=10
+            if not (flag==1 or flag==0):
+                messages.pop()
+                flag-=1
+                raise IOError('操作频繁')
+
+                # new_content=prix_cha_pro+messages[-1].get('content')+messages[-2].get('content')
+                # flag-=1
+                # messages.pop()
+                # messages.pop()
+                # gemini_messages.pop()                
             res.append({
                 "role": role,
                 "parts": [{"text": new_content }]
